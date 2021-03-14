@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POSTIt</title>
+<link href="css/stylesheet1.css" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<style>
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.bg {
+  /* The image used */
+  background-image: url("/img/back.png");
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+.caption {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  color: #34495E;
+
+
+}
+
+.caption span.border {
+  color:   #2E4053 ;
+  padding: 18px;
+  font-size: 35px;
+  letter-spacing: 10px;
+}
+
+
+</style>
+</head>
+<body>
+
+
+      <div class="row" style="padding-left:10px;padding-right:10px;padding-top:10%;">
+          <div class="col-sm-4">
+          </div>
+                <div class="col-sm-4">
+        <div class="card boder shadow-lg p-3 mb-2 bg-white"  style="margin-bottom:10px;width:100%;">
+          <h5 class="text-center" style="padding-bottom:30px;"> Sign Up </h5>
+      <form action="/signup" method="post" onsubmit="return validateData()">
+        <input class="form-control" type="text" id="userid"  name="userid"  placeholder="Nickname"  autofocus>
+        {{message}}
+    <input class="form-control" type="text" id="name" name="name" value="{{emailaddress}}" placeholder="Username" style="margin-top:10px;" >
+    <textarea class="form-control" id="about" name="about" placeholder="about.." style="height:100px;margin-top:10px;width:100%"></textarea>
+<div class="row"style="margin-top:20px;padding:20px;">
+
+
+
+    <input type="submit"  id="button_Add" value="Sign Up" name="button"  class="btn btn-info btn-block" onclick="clicked='Sign Up' "/>
+  <input type="submit"  id="button_Cancel" value="Cancel" name="button"  class="btn btn-secondary btn-block" onclick="clicked='Cancel' "/>
+    </div>
+      </form>
+    </div>
+      </div>
+  </div>
+
+  <script type="text/javascript">
+  var clicked;
+     function validateData(){
+       if(clicked=='Sign Up'){
+           userid = document.getElementById("userid").value
+           name = document.getElementById("name").value;
+           if(name.length > 0 && userid.length>0){
+              return true;
+           }else{
+             alert("Userid and Name date should not be null!!")
+              return false;
+           }
+       }else{
+          return true;
+        }
+
+     }
+     </script>
+</body>
+</html>

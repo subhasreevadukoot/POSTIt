@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>POSTIt</title>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+<style>
+
+body{
+  font-family: Tahoma,Verdana ;
+  font-size: 85%;
+  margin-left:20%;
+  margin-right:20%;
+}
+
+.main {
+  padding: 0px 10px;
+  margin-top: 100px;
+}
+
+
+navbar-brand>img {
+   max-height: 100%;
+   height: 100%;
+   width: auto;
+   margin: 0 auto;
+}
+
+navbar-brand>a {
+  letter-spacing:10px;
+}
+
+.navbar{
+padding-left:20%;
+padding-right:20%;
+
+}
+
+.box{
+  box-model: border-box;
+  border: 3px solid transparent;
+  background-clip:padding-box;
+}
+
+.widgets {
+    display: flex;
+    justify-content: space-around;
+}
+
+.nogap > .col{ padding-left:7.5px; padding-right: 7.5px}
+.nogap > .col:first-child{ padding-left: 15px; }
+.nogap > .col:last-child{ padding-right: 15px; }
+
+.cssBox {
+  flex-basis: calc(50% - 20px);
+}
+
+.rcorners1 {
+  border-radius: 25px;
+  background: #73AD21;
+  padding: 20px;
+  width: 200px;
+  height: 150px;
+}
+
+
+.circle {
+  position: relative;
+  width: 100%;
+  height: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid gray;
+}
+
+.circle img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.follow {
+  background-color:#D98880; /* Green */
+  border: none;
+  color:white  ;
+  padding:10px;
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+
+.follow:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+.comment_data {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+}
+
+</style>
+</head>
+<body>
+
+     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top border-bottom" >
+       <a class="navbar-brand" href="/timeline" style="  letter-spacing:10px;">POSTIt</a>
+
+          <form class="form-inline flex-nowrap bg-light mx-2 mx-lg-auto rounded p-1" action="/searchUser">
+
+           <input  placeholder="Search account.." list="user_data" id="searchText"  class="form-control mr-sm-2" name="searchText" onchange=" return this.form.submit();"/>
+
+           <datalist id="user_data">
+             {% if all_user_search %}
+             {% for each_user in all_user_search %}
+                   <option value="{{each_user.userId }}" >{{each_user.userName }}</option>
+                 {% endfor %}
+           {% endif %}
+           </datalist>
+
+         </form>
+          <a   href="/timeline" title="Home" style="padding-left:25px;"><i class="fa fa-home fa-2x"></i></a>
+          <a   href="/logout" title="Logout" style="padding-left:25px;"><i class="fa fa-power-off fa-2x"></i></a>
+
+     </nav>
+
+
+<div>{% block content %} {% endblock %}</div>
+
+
+</body>
+
+</html>

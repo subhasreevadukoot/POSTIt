@@ -1,0 +1,178 @@
+{% extends "basicPage.html" %}
+{% block content %}
+
+<div class="main">
+  {% if message %}
+<div class="row" id="messge_bar">
+      <div class="col-sm-12" style="background:#F1948A">
+        {{ message }}
+        </div>
+          </div>
+            {% endif %}
+  <div class="row " style="margin-top:10px;" >
+
+<div class="card " style ="Height:650px;">
+    <h6 class="card-header info-color white-text text-center py-2 " >
+
+      <label style="width:150px;"><strong >{{insta_user.userId}}</strong></label>
+        <div class="circle border-info " style="border: 1.5px solid;margin-top:10px;height:150px;width:150px;display: block;margin-left:auto;margin-right: auto ">
+        {% if insta_user.pro_pic %}
+        <br/><img src="/fetchPic?id={{insta_user.key.id()}}&&mode=PROFILE" ></img>
+        {% endif %}
+      </div>
+      {% if not owner_user %}
+        <form class="" action="{{pro_pic_url}}" enctype="multipart/form-data" method="post" style="margin-bottom:10px">
+            <label for="proPic" class="btn btn-info btn-sm" style="margin-top:20px">Change Profile Pic</label>
+        <input type="file" id="proPic" name="proPic" accept="image/jpeg, image/png" name="image" value="" onchange="validatePic(this);" hidden>
+        </form>
+      {% endif %}
+    </h6>
+      {% if owner_user %}
+        <form method="post" action="/followUser" >
+          {% if owner_user.key.id() in  insta_user.followers %}
+              <input type="hidden" value="{{insta_user.key.id()}}" name="id">
+              <input type="hidden" value="Unfollow" name="button">
+              <button class="follow" type="submit" style="width:100%;" ">Unfollow</button>
+          {% else %}
+            <input type="hidden" value="{{insta_user.key.id()}}" name="id">
+            <input type="hidden" value="Follow" name="button">
+            <button class="follow" type="submit" style="width:100%;" ">Follow</button>
+
+          {% endif %}
+            </form>
+      {% endif %}
+
+    <div class="card-body px-lg-5 pt-0">
+
+            <div class="md-form  my-2 text-center" style="font-size: 20px;color:#154360;width:150px">
+                <label style="width:150px;">{{insta_user.userName}}</label>
+            </div>
+
+            <div class="md-form my-2 text-center" style="font-size: 15px;color:#154360;width:150px">
+                <label style="width:150px;"> {% if insta_user.about %} " {{insta_user.about}} "   {% endif %}</label>
+            </div>
+
+            <form method="post" action="/followList" >
+            <input type="hidden" value="{{insta_user.key.id()}}" name="id">
+            <button class="btn btn-outline-info btn-block" type="submit" value="Following" name="mode" >Following <span class="badge badge-light" ><i class="fa fa-user"></i> {{insta_user.following | length}} </span></button>
+            <button class="btn btn-outline-info btn-block my-4 " type="submit" value="Followers" name="mode">Followers <span class="badge badge-light" ><i class="fa fa-user"></i>{{insta_user.followers | length}}  </span></button>
+        </form>
+        <!-- Form -->
+
+    </div>
+
+</div>
+      <div class="col-sm-8 " >
+
+        {% if all_posts %}
+        {% for post in all_posts %}
+        <div class="card boder shadow-lg p-3 mb-2 bg-white"  style="margin-bottom:10px">
+          <div class="card-header ">
+              <div class="row">
+            <div class="circle border-info " style="border: 1.5px solid;height:50px;width:50px;">
+
+            <!-- {% if  post[5] %} -->
+            <br/><img src="/img/profile.png" ></img>
+            <!-- {% endif %} -->
+          </div>
+          <div class="row-fluid">
+
+
+            <div class="span2" style="padding-left:10px"><strong><a href="/profile?id={{ post[5] }}" style="color:#154360;text-decoration: none;">{{ post[4] }}</a></strong></div>
+          <div class="span2" style="padding-left:10px"><font size="2px"><a href="/profile?id={{ post[5] }}" style="color:#5D6D7E;text-decoration: none;">{{ post[2].strftime("%d-%m-%Y %I:%M:%S %p") }}</a></font></div>
+        </div>
+
+          </div>
+          </div>
+          <div class="card-body text-center">
+            <p style="float:left">{{ post[1] }}</p>
+            {% if post[3] %}
+            <br/><img src="/fetchPic?id={{post[0]}}&&mode=POST" width="85%" height="300px"></img>
+            {% endif %}
+          </div>
+          <div class="card-footer form-group" style="font-size:13px;color:#5D6D7E;">
+
+          {% if post[6] %}
+              {% if post[6]|length > 5 %}
+                  {% for i in range(5) %}
+                      <font size="2px" color="black"><strong> {{post[6][i][0]}} </strong><font>&nbsp;{{post[6][i][1]}} <br>
+                  {% endfor %}
+                  <label id="view" name="view" class="collapsible" style="color:#5D6D7E;">Click to View All Comments</label>
+                  <div class="comment_data">
+                      {% for i in range((post[6]|length)) %}
+                      {% if i > 4 %}
+                        <font size="2px" color="black"><strong> {{post[6][i][0]}} </strong><font>&nbsp;{{post[6][i][1]}} <br>
+                      {% endif %}
+                      {% endfor %}
+                  </div>
+              {% else %}
+                    {% for i in range(post[6]|length) %}
+                      <font size="2px" color="black"><strong> {{post[6][i][0]}} </strong><font>&nbsp;{{post[6][i][1]}} <br>
+                    {% endfor %}
+              {% endif %}
+              {% elif  post[7] %}
+                  <font size="2px" color="black"><strong> {{post[7][0]}} </strong><font>&nbsp;{{post[7][1]}} <br>
+          {% endif %}
+          <br/>
+          <form method="post"  action="/doComment" style="width:100%;">
+          <input type="hidden" value="{{ post[0] }}" name="postid">
+          <input type="hidden" value="profile" name="page">
+          <input type="hidden" value="{{ post[5] }}" name="profileid">
+          <input class="form-control form-control-sm" name ="commentText" maxlength="200" id="commentText" type="text" placeholder="Add a comment.." onkeypress="javascript:if (event.which || event.keyCode){if ((event.which == 13) ) {this.form.submit();}};">
+          </form>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="card boder shadow-lg p-3 mb-2 bg-white"  style="margin-bottom:10px">
+          <div class="card-header ">No post Found! {{finalFollowList}}
+          </div>
+        </div>
+        {% endif %}
+          </div>
+    </div>
+
+  </div>
+  <script type="text/javascript">
+//for expanding comments
+  var coll = document.getElementsByClassName("collapsible");
+  var butoon = document.getElementById("view");
+  var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+      butoon.value = "View All Comments"
+      butoon.innerHTML = "Click to View All Comments"
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+      butoon.value = "Hide Comments"
+      butoon.innerHTML = "Click to Hide Comments"
+    }
+  });
+}
+
+  function validatePic(sel)
+      {
+          var file=document.getElementById("proPic").value;
+          var validJpg = file.toUpperCase().match(".JPG");
+          var validJpeg = file.toUpperCase().match(".JPEG");
+          var validPng = file.toUpperCase().match(".PNG");
+          if(validJpg || validJpeg || validPng)
+          {
+              sel.form.submit();
+          }
+          else
+          {
+              alert("Sorry only jpg or png images are accepted");
+          }
+      }
+
+
+
+   </script>
+
+{% endblock %}

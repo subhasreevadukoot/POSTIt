@@ -1,0 +1,101 @@
+{% extends "basicPage.html" %}
+{% block content %}
+
+<div class="main">
+
+  <div class="row " style="margin-top:10px;" >
+        <!-- Material form contact -->
+<div class="card " style ="Height:650px;">
+    <h6 class="card-header info-color white-text text-center py-2 " >
+
+      <label style="width:150px;"><strong >{{insta_user.userId}}</strong></label>
+        <div class="circle border-info " style="border: 1.5px solid;margin-top:10px;height:150px;width:150px;display: block;margin-left:auto;margin-right: auto ">
+        {% if insta_user.pro_pic %}
+        <br/><img src="/fetchPic?id={{insta_user.key.id()}}&&mode=PROFILE" ></img>
+        {% endif %}
+      </div>
+      {% if not owner_user %}
+        <form class="" action="/profilePic" enctype="multipart/form-data" method="post" style="margin-bottom:10px">
+            <label for="proPic" class="btn btn-info btn-sm" style="margin-top:20px">Change Profile Pic</label>
+        <input type="file" id="proPic" name="proPic" accept="image/jpeg, image/png" name="image" value="" onchange="this.form.submit();" hidden>
+        </form>
+      {% endif %}
+    </h6>
+      {% if owner_user %}
+        <form method="post" action="/followUser" >
+          {% if owner_user.key.id() in  insta_user.followers %}
+              <input type="hidden" value="{{insta_user.key.id()}}" name="id">
+                <input type="hidden" value="Unfollow" name="button">
+              <button class="follow" type="submit" style="width:100%;" ">Unfollow</button>
+          {% else %}
+            <input type="hidden" value="{{insta_user.key.id()}}" name="id">
+            <input type="hidden" value="Follow" name="button">
+            <button class="follow" type="submit" style="width:100%;" ">Follow</button>
+
+          {% endif %}
+            </form>
+      {% endif %}
+
+    <div class="card-body px-lg-5 pt-0">
+
+            <div class="md-form  my-2 text-center" style="font-size: 20px;color:#154360;width:150px">
+                <label style="width:150px;">{{insta_user.userName}}</label>
+            </div>
+
+            <div class="md-form my-2 text-center" style="font-size: 15px;color:#154360;width:150px">
+                <label style="width:150px;"> {% if insta_user.about %} " {{insta_user.about}} "   {% endif %}</label>
+            </div>
+
+            <form method="post" action="/followList" >
+            <input type="hidden" value="{{insta_user.key.id()}}" name="id">
+            <button class="btn btn-outline-info btn-block" type="submit" value="Following" name="mode" >Following <span class="badge badge-light" ><i class="fa fa-user"></i> {{insta_user.following | length}} </span></button>
+            <button class="btn btn-outline-info btn-block my-4 " type="submit" value="Followers" name="mode">Followers <span class="badge badge-light" ><i class="fa fa-user"></i>{{insta_user.followers | length}}  </span></button>
+        </form>
+        <!-- Form -->
+
+    </div>
+
+</div>
+      <div class="col-sm-8 " >
+        <div class="row" style="padding-left:10px;padding-right:10px;">
+          <div class="card boder shadow-lg p-3 mb-2 bg-white"  style="margin-bottom:10px;width:100%;">
+          <h5 >  {{listHeader}} {{followingsUsersList | length}}</h5>
+           </div>
+          </div>
+          {% if followingsUsersList %}
+          <div class="card boder shadow-lg p-3 mb-2 bg-white"  style="margin-bottom:10px">
+              {% for fuser in followingsUsersList %}
+            <div class="card-header ">
+              <div class="row">
+              <div class="circle border-info " style="border: 1.5px solid;height:50px;width:50px;">
+                <br/><img src="/img/profile.png" ></img>
+            </div>
+              <div class="row-fluid">
+              <div class="span2" style="padding-left:10px"><strong><a href="/profile?id={{ fuser[2] }}" style="color:#154360;text-decoration: none;">{{ fuser[0] }}</a></strong></div>
+            <div class="span2" style="padding-left:10px"><font size="2px"><a href="/profile?id={{ fuser[2] }}" style="color:#5D6D7E;text-decoration: none;">{{fuser[1] }}</a></font></div>
+          </div></div></div>
+            {% endfor %}
+          </div>
+
+          {% else %}
+          <div class="card boder shadow-lg p-3 mb-2 bg-white"  style="margin-bottom:10px">
+            <div class="card-header ">No {{listHeader}} Found!
+            </div>
+          </div>
+          {% endif %}
+          </div>
+    </div>
+
+  </div>
+  <script type="text/javascript">
+
+     function showfile() {
+       var name = document.getElementById('postPic');
+       document.getElementById("filename").innerHTML = name.files.item(0).name;
+     }
+
+
+
+   </script>
+
+{% endblock %}
